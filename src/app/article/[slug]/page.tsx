@@ -156,8 +156,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <p className="text-sm text-gray-500 mt-4">
               Still need help?{' '}
               <Link 
-                href="https://subcold.com/pages/contact-us1"
-                target="_blank"
+                href="/contact"
                 className="text-subcold-teal hover:underline"
               >
                 Contact Support

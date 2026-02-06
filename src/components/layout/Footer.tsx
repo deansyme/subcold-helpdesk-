@@ -1,10 +1,30 @@
 import Link from 'next/link'
+import { RotateCcw } from 'lucide-react'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
   
   return (
     <footer className="bg-subcold-black text-white">
+      {/* Returns Banner */}
+      <div className="bg-subcold-teal">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center text-white">
+              <RotateCcw className="h-6 w-6 mr-3" />
+              <span className="text-lg font-semibold">NEED TO RETURN AN ITEM? No problem!</span>
+            </div>
+            <Link
+              href="https://subcold.com/pages/self-return-request-form"
+              target="_blank"
+              className="px-6 py-2 bg-white text-subcold-teal font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Start your return HERE
+            </Link>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -30,7 +50,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="https://subcold.com/pages/contact-us1" target="_blank" className="text-gray-400 hover:text-white text-sm transition-colors">
+                <Link href="/contact" className="text-gray-400 hover:text-white text-sm transition-colors">
                   Contact Us
                 </Link>
               </li>
