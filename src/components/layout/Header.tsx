@@ -25,21 +25,6 @@ export function Header() {
 
           {/* Navigation */}
           <nav className="flex items-center space-x-4">
-            <Link 
-              href="https://subcold.com" 
-              target="_blank"
-              className="text-gray-300 hover:text-white text-sm transition-colors"
-            >
-              Shop
-            </Link>
-            <Link 
-              href="https://subcold.com/pages/contact-us1" 
-              target="_blank"
-              className="text-gray-300 hover:text-white text-sm transition-colors"
-            >
-              Contact Us
-            </Link>
-            <div className="border-l border-gray-700 h-6 mx-2" />
             <LanguageSwitcher currentLocale={locale} />
           </nav>
         </div>
