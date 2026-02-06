@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --subcold-black: #000000;
+  --subcold-dark: #111111;
+  --subcold-gray: #1a1a1a;
+  --subcold-gray-light: #2a2a2a;
+  --subcold-teal: #00B4D8;
+  --subcold-teal-dark: #0096B4;
+  --subcold-teal-light: #48CAE4;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Prose styling for article content */
+.prose {
+  @apply text-gray-700 leading-relaxed;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold text-gray-900 mt-8 mb-4;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold text-gray-900 mt-6 mb-3;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose a {
+  @apply text-subcold-teal hover:text-subcold-teal-dark underline;
+}
+
+.prose strong {
+  @apply font-semibold text-gray-900;
+}
+
+.prose table {
+  @apply w-full border-collapse mb-4;
+}
+
+.prose th, .prose td {
+  @apply border border-gray-300 px-4 py-2 text-left;
+}
+
+.prose th {
+  @apply bg-gray-100 font-semibold;
+}
+
+/* TipTap Editor Styles */
+.tiptap {
+  @apply outline-none min-h-[300px];
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  @apply text-gray-400 float-left h-0 pointer-events-none;
+  content: attr(data-placeholder);
+}
+
+/* Category Card Hover Effect */
+.category-card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.category-card:hover {
+  @apply transform -translate-y-1 shadow-xl;
+}
+
+/* Search highlight */
+.search-highlight {
+  @apply bg-yellow-200;
+}
+
+/* Admin sidebar */
+.admin-sidebar {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-2 border-gray-300 border-t-subcold-teal;
+}

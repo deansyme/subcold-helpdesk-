@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  icon        String    @default("HelpCircle")
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  articles    Article[]
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  excerpt     String?
+  isPopular   Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  viewCount   Int      @default(0)
+  locale      String   @default("en-GB")
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([isPopular])
+  @@index([isPublished])
+  @@index([locale])
+}
+
+model SiteSettings {
+  id                 String  @id @default("default")
+  siteName           String  @default("Subcold Support")
+  heroTitle          String  @default("HOW CAN WE HELP?")
+  heroSubtitle       String?
+  contactFormEmbed   String?
+  footerText         String?
+  primaryColor       String  @default("#00B4D8")
+  logoUrl            String  @default("https://subcold.com/cdn/shop/files/subcold-logo-white_39563153-4a05-4674-b976-f96a36b48c2c.png?v=1760517416&width=156")
+}
