@@ -1,7 +1,5 @@
-import { redirect, notFound } from 'next/navigation'
-import { getServerSession } from 'next-auth'
+import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import ReturnStatusForm from './ReturnStatusForm'
 
@@ -12,12 +10,6 @@ async function getReturnRequest(id: string) {
 }
 
 export default async function ReturnDetailPage({ params }: { params: { id: string } }) {
-  const session = await getServerSession(authOptions)
-  
-  if (!session) {
-    redirect('/admin/login')
-  }
-
   const request = await getReturnRequest(params.id)
 
   if (!request) {
@@ -45,7 +37,7 @@ export default async function ReturnDetailPage({ params }: { params: { id: strin
   }
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <Link 
