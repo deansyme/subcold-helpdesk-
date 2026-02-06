@@ -116,3 +116,20 @@ model ReturnRequest {
   @@index([email])
   @@index([orderNumber])
 }
+
+model ReturnFormConfig {
+  id                    String   @id @default("default")
+  products              Json     // Array of product objects with name and requiresSerial
+  purchaseChannels      Json     // Array of channel names
+  unwantedReasons       Json     // Array of reason strings
+  returnReasons         Json     // Array of return reason options (Unwanted, Damage, Faulty)
+  replacementOptions    Json     // Array of replacement preference options
+  troubleshootingOptions Json    // Array of troubleshooting question options
+  formTitle             String   @default("Self-Return Request Form")
+  formDescription       String?
+  successTitle          String   @default("Request Submitted Successfully!")
+  successMessage        String   @default("We have received your self-return request. Our team will review your submission and get back to you within 1-2 working days.")
+  requirePhotoForDamage Boolean  @default(true)
+  updatedAt             DateTime @updatedAt
+}
+

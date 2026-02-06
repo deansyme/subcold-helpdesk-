@@ -1,73 +1,42 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-// Product list from the Globo form
-const PRODUCTS = [
-  'Subcold Classic4 Black',
-  'Subcold Classic4 White',
-  'Subcold Eco4 Black',
-  'Subcold Eco4 White',
-  'Subcold Eco75 Black',
-  'Subcold Eco75 White',
-  'Subcold Pro4 Black',
-  'Subcold Pro4 White',
-  'Subcold Pro6 Black',
-  'Subcold Pro6 White',
-  'Subcold Pro6 Vintage',
-  'Subcold Pro8 Black',
-  'Subcold Pro10 Black',
-  'Subcold Pro10 White',
-  'Subcold Pro18 Litre Black',
-  'Subcold Pro18 Litre White',
-  'Subcold Pro25 Litre Black',
-  'Subcold Pro25 Litre White',
-  'Subcold Pro32 Black',
-  'Subcold Pro32 White',
-  'Subcold Pro62 Black',
-  'Subcold Viva 16 litre',
-  'Subcold Viva 24 litre',
-  'Subcold Viva 28 litre',
-  'Subcold Ultra6 Black'
-]
+interface Product {
+  name: string
+  requiresSerial: boolean
+}
 
-// Products that require serial number
-const SERIAL_PRODUCTS = [
-  'Subcold Pro18 Litre Black',
-  'Subcold Pro18 Litre White',
-  'Subcold Pro25 Litre Black',
-  'Subcold Pro25 Litre White',
-  'Subcold Pro32 Black',
-  'Subcold Pro32 White',
-  'Subcold Pro62 Black',
-  'Subcold Viva 16 litre',
-  'Subcold Viva 24 litre',
-  'Subcold Viva 28 litre'
-]
+interface ReturnReason {
+  value: string
+  label: string
+  showUnwantedReason?: boolean
+  showProductDetails?: boolean
+  showPhotoUpload?: boolean
+  showTroubleshooting?: boolean
+}
 
-const PURCHASE_CHANNELS = [
-  'Subcold.com',
-  'Amazon',
-  'eBay',
-  'Onbuy',
-  'Debenhams',
-  'B&Q',
-  'Other marketplace'
-]
+interface SelectOption {
+  value: string
+  label: string
+}
 
-const UNWANTED_REASONS = [
-  'Changed my mind',
-  'Found better price',
-  'Product smaller than expected',
-  'Product bigger than expected',
-  'Bought by mistake',
-  'Other'
-]
-
-type ReturnReason = 'Unwanted' | 'Damage' | 'Faulty' | ''
+interface FormConfig {
+  products: Product[]
+  purchaseChannels: string[]
+  unwantedReasons: string[]
+  returnReasons: ReturnReason[]
+  replacementOptions: SelectOption[]
+  troubleshootingOptions: SelectOption[]
+  formTitle: string
+  formDescription: string
+  successTitle: string
+  successMessage: string
+  requirePhotoForDamage: boolean
+}
 
 interface FormData {
-  returnReason: ReturnReason
+  returnReason: string
   fullName: string
   email: string
   orderNumber: string
@@ -81,6 +50,8 @@ interface FormData {
 }
 
 export default function ReturnRequestForm() {
+  const [config, setConfig] = useState<FormConfig | null>(null)
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true)
   const [formData, setFormData] = useState<FormData>({
     returnReason: '',
     fullName: '',
@@ -100,6 +71,23 @@ export default function ReturnRequestForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/admin/return-form-config')
+        if (response.ok) {
+          const data = await response.json()
+          setConfig(data)
+        }
+      } catch (error) {
+        console.error('Error fetching form config:', error)
+      } finally {
+        setIsLoadingConfig(false)
+      }
+    }
+    fetchConfig()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -127,12 +115,16 @@ export default function ReturnRequestForm() {
     setPhotoPreviews(prev => prev.filter((_, i) => i !== index))
   }
 
-  const requiresSerialNumber = SERIAL_PRODUCTS.includes(formData.productName)
-  const showUnwantedReason = formData.returnReason === 'Unwanted'
-  const showProductDetails = formData.returnReason === 'Damage' || formData.returnReason === 'Faulty'
-  const showTroubleshooting = formData.returnReason === 'Faulty'
-  const showPhotoUpload = formData.returnReason === 'Damage'
-  const showDescription = formData.returnReason === 'Damage' || formData.returnReason === 'Faulty'
+  // Get current return reason config
+  const currentReturnReason = config?.returnReasons.find(r => r.value === formData.returnReason)
+  const selectedProduct = config?.products.find(p => p.name === formData.productName)
+  
+  const requiresSerialNumber = selectedProduct?.requiresSerial ?? false
+  const showUnwantedReason = currentReturnReason?.showUnwantedReason ?? false
+  const showProductDetails = currentReturnReason?.showProductDetails ?? false
+  const showTroubleshooting = currentReturnReason?.showTroubleshooting ?? false
+  const showPhotoUpload = currentReturnReason?.showPhotoUpload ?? false
+  const showDescription = showProductDetails
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -191,6 +183,26 @@ export default function ReturnRequestForm() {
     }
   }
 
+  if (isLoadingConfig) {
+    return (
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!config) {
+    return (
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+        <div className="text-center text-gray-500">
+          Unable to load form. Please try refreshing the page.
+        </div>
+      </div>
+    )
+  }
+
   if (submitStatus === 'success') {
     return (
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
@@ -200,10 +212,8 @@ export default function ReturnRequestForm() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Request Submitted Successfully!</h2>
-          <p className="text-gray-600 mb-6">
-            We have received your self-return request. Our team will review your submission and get back to you within 1-2 working days.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{config.successTitle}</h2>
+          <p className="text-gray-600 mb-6">{config.successMessage}</p>
           <p className="text-gray-600 mb-8">
             A confirmation email has been sent to your email address with your request details.
           </p>
@@ -220,7 +230,10 @@ export default function ReturnRequestForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Self-Return Request Form</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">{config.formTitle}</h2>
+      {config.formDescription && (
+        <p className="text-gray-600 mb-6">{config.formDescription}</p>
+      )}
       
       {submitStatus === 'error' && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
@@ -241,9 +254,9 @@ export default function ReturnRequestForm() {
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
         >
           <option value="">Please select</option>
-          <option value="Unwanted">Unwanted</option>
-          <option value="Damage">Damage</option>
-          <option value="Faulty">Faulty</option>
+          {config.returnReasons.map(reason => (
+            <option key={reason.value} value={reason.value}>{reason.label}</option>
+          ))}
         </select>
       </div>
 
@@ -291,7 +304,7 @@ export default function ReturnRequestForm() {
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
         >
           <option value="">Please select</option>
-          {PURCHASE_CHANNELS.map(channel => (
+          {config.purchaseChannels.map(channel => (
             <option key={channel} value={channel}>{channel}</option>
           ))}
         </select>
@@ -326,7 +339,7 @@ export default function ReturnRequestForm() {
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           >
             <option value="">Please select</option>
-            {UNWANTED_REASONS.map(reason => (
+            {config.unwantedReasons.map(reason => (
               <option key={reason} value={reason}>{reason}</option>
             ))}
           </select>
@@ -352,8 +365,8 @@ export default function ReturnRequestForm() {
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             >
               <option value="">Please select your product</option>
-              {PRODUCTS.map(product => (
-                <option key={product} value={product}>{product}</option>
+              {config.products.map(product => (
+                <option key={product.name} value={product.name}>{product.name}</option>
               ))}
             </select>
           </div>
@@ -395,8 +408,9 @@ export default function ReturnRequestForm() {
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           >
             <option value="">Please select</option>
-            <option value="Yes">Yes, I have followed all steps</option>
-            <option value="No">No, I need help with troubleshooting</option>
+            {config.troubleshootingOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
           <p className="mt-3 text-sm text-gray-600">
             Many issues can be resolved by following the troubleshooting guide in your user manual. 
@@ -409,7 +423,7 @@ export default function ReturnRequestForm() {
       {showPhotoUpload && (
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upload Photos of Damage <span className="text-red-500">*</span>
+            Upload Photos of Damage {config.requirePhotoForDamage && <span className="text-red-500">*</span>}
           </label>
           <p className="text-sm text-gray-500 mb-3">
             Please upload clear photos showing the damage to help us process your request quickly.
@@ -477,7 +491,7 @@ export default function ReturnRequestForm() {
       )}
 
       {/* Replacement preference for Damage/Faulty */}
-      {showProductDetails && (
+      {showProductDetails && config.replacementOptions.length > 0 && (
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Would you prefer a replacement or refund?
@@ -489,9 +503,9 @@ export default function ReturnRequestForm() {
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           >
             <option value="">Please select</option>
-            <option value="Replacement">Replacement unit</option>
-            <option value="Refund">Full refund</option>
-            <option value="Either">No preference</option>
+            {config.replacementOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
         </div>
       )}
