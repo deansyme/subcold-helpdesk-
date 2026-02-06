@@ -6,44 +6,39 @@ import { ArticleCard } from '@/components/ui/ArticleCard'
 import { notFound } from 'next/navigation'
 import { Eye, Calendar, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { getLocale } from 'next-intl/server'
+import { getArticleWithTranslation } from '@/lib/translations'
 
 interface ArticlePageProps {
   params: { slug: string }
 }
 
-async function getArticle(slug: string) {
-  const article = await prisma.article.findUnique({
-    where: { slug, isPublished: true },
-    include: {
-      category: {
-        select: { id: true, name: true, slug: true }
-      }
-    }
-  })
-
-  if (article) {
-    // Increment view count
-    await prisma.article.update({
-      where: { id: article.id },
-      data: { viewCount: { increment: 1 } }
-    })
-  }
-
-  return article
-}
-
-async function getRelatedArticles(categoryId: string, currentArticleId: string) {
-  return prisma.article.findMany({
+async function getRelatedArticles(categoryId: string, currentArticleId: string, locale: string) {
+  const articles = await prisma.article.findMany({
     where: {
       categoryId,
       isPublished: true,
       id: { not: currentArticleId }
+    },
+    include: {
+      translations: {
+        where: { locale }
+      }
     },
     take: 3,
     orderBy: [
       { isPopular: 'desc' },
       { viewCount: 'desc' }
     ]
+  })
+
+  return articles.map(article => {
+    const translation = article.translations[0]
+    return {
+      ...article,
+      title: translation?.title || article.title,
+      excerpt: translation?.excerpt || article.excerpt
+    }
   })
 }
 
@@ -63,13 +58,14 @@ export async function generateMetadata({ params }: ArticlePageProps) {
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const article = await getArticle(params.slug)
+  const locale = await getLocale()
+  const article = await getArticleWithTranslation(params.slug, locale)
 
   if (!article) {
     notFound()
   }
 
-  const relatedArticles = await getRelatedArticles(article.categoryId, article.id)
+  const relatedArticles = await getRelatedArticles(article.categoryId, article.id, locale)
 
   const formattedDate = new Date(article.updatedAt).toLocaleDateString('en-GB', {
     day: 'numeric',

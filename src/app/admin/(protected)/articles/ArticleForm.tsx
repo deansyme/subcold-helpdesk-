@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, Save, Eye } from 'lucide-react'
 import slugify from 'slugify'
 import dynamic from 'next/dynamic'
+import { ArticleTranslations } from '@/components/admin/ArticleTranslations'
 
 const RichTextEditor = dynamic(
   () => import('@/components/admin/RichTextEditor').then((mod) => mod.RichTextEditor),
@@ -261,6 +262,18 @@ export function ArticleForm({ article, categories }: ArticleFormProps) {
           </div>
         </div>
       </div>
+
+      {/* Translations Section - Only show when editing */}
+      {article && (
+        <div className="mt-6">
+          <ArticleTranslations
+            articleId={article.id}
+            originalTitle={article.title}
+            originalContent={article.content}
+            originalExcerpt={article.excerpt}
+          />
+        </div>
+      )}
     </form>
   )
 }

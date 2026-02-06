@@ -1,39 +1,14 @@
-import { prisma } from '@/lib/prisma'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { ArticleCard } from '@/components/ui/ArticleCard'
 import { SearchBar } from '@/components/ui/SearchBar'
 import { Search } from 'lucide-react'
+import { getLocale } from 'next-intl/server'
+import { searchArticlesWithTranslations } from '@/lib/translations'
 
 interface SearchPageProps {
   searchParams: { q?: string }
-}
-
-async function searchArticles(query: string) {
-  if (!query || query.length < 2) return []
-
-  // Simple search - in production you might want to use full-text search
-  return prisma.article.findMany({
-    where: {
-      isPublished: true,
-      OR: [
-        { title: { contains: query } },
-        { content: { contains: query } },
-        { excerpt: { contains: query } },
-      ]
-    },
-    include: {
-      category: {
-        select: { name: true, slug: true }
-      }
-    },
-    orderBy: [
-      { isPopular: 'desc' },
-      { viewCount: 'desc' }
-    ],
-    take: 20
-  })
 }
 
 export async function generateMetadata({ searchParams }: SearchPageProps) {
@@ -45,7 +20,8 @@ export async function generateMetadata({ searchParams }: SearchPageProps) {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q || ''
-  const results = await searchArticles(query)
+  const locale = await getLocale()
+  const results = await searchArticlesWithTranslations(query, locale)
 
   return (
     <div className="min-h-screen flex flex-col">

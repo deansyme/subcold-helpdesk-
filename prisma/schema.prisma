@@ -18,36 +18,67 @@ model User {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String?
-  icon        String    @default("HelpCircle")
-  order       Int       @default(0)
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  articles    Article[]
+  id           String                @id @default(cuid())
+  name         String
+  slug         String                @unique
+  description  String?
+  icon         String                @default("HelpCircle")
+  order        Int                   @default(0)
+  isActive     Boolean               @default(true)
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  articles     Article[]
+  translations CategoryTranslation[]
 }
 
 model Article {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String
-  excerpt     String?
-  isPopular   Boolean  @default(false)
-  isPublished Boolean  @default(true)
-  viewCount   Int      @default(0)
-  locale      String   @default("en-GB")
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String               @id @default(cuid())
+  title        String
+  slug         String               @unique
+  content      String
+  excerpt      String?
+  isPopular    Boolean              @default(false)
+  isPublished  Boolean              @default(true)
+  viewCount    Int                  @default(0)
+  locale       String               @default("en")
+  categoryId   String
+  category     Category             @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  translations ArticleTranslation[]
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
 
   @@index([categoryId])
   @@index([isPopular])
   @@index([isPublished])
+  @@index([locale])
+}
+
+model ArticleTranslation {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  locale    String
+  title     String
+  content   String
+  excerpt   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([articleId, locale])
+  @@index([locale])
+}
+
+model CategoryTranslation {
+  id          String   @id @default(cuid())
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale      String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([categoryId, locale])
   @@index([locale])
 }
 

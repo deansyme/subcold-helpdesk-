@@ -1,10 +1,11 @@
 import { prisma } from '@/lib/prisma'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { ArticleCard } from '@/components/ui/ArticleCard'
 import { CategorySwitcher } from '@/components/ui/CategorySwitcher'
 import { notFound } from 'next/navigation'
+import { getLocale } from 'next-intl/server'
+import { getCategoryWithTranslation, getCategoriesWithTranslations } from '@/lib/translations'
 import {
   Package,
   RotateCcw,
@@ -30,31 +31,14 @@ interface CategoryPageProps {
   params: { slug: string }
 }
 
-async function getCategory(slug: string) {
+async function getCategoryBasic(slug: string) {
   return prisma.category.findUnique({
-    where: { slug, isActive: true },
-    include: {
-      articles: {
-        where: { isPublished: true },
-        orderBy: [
-          { isPopular: 'desc' },
-          { viewCount: 'desc' },
-        ]
-      }
-    }
-  })
-}
-
-async function getAllCategories() {
-  return prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' },
-    select: { id: true, name: true, slug: true }
+    where: { slug, isActive: true }
   })
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
-  const category = await getCategory(params.slug)
+  const category = await getCategoryBasic(params.slug)
   
   if (!category) {
     return { title: 'Category Not Found' }
@@ -67,9 +51,10 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
+  const locale = await getLocale()
   const [category, allCategories] = await Promise.all([
-    getCategory(params.slug),
-    getAllCategories()
+    getCategoryWithTranslation(params.slug, locale),
+    getCategoriesWithTranslations(locale)
   ])
 
   if (!category) {

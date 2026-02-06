@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save } from 'lucide-react'
 import slugify from 'slugify'
+import { CategoryTranslations } from '@/components/admin/CategoryTranslations'
 
 const iconOptions = [
   { value: 'Package', label: 'Package (Orders)' },
@@ -204,6 +205,17 @@ export function CategoryForm({ category }: CategoryFormProps) {
           </div>
         </div>
       </div>
+
+      {/* Translations Section - Only show when editing */}
+      {category && (
+        <div className="mt-6">
+          <CategoryTranslations
+            categoryId={category.id}
+            originalName={category.name}
+            originalDescription={category.description}
+          />
+        </div>
+      )}
     </form>
   )
 }

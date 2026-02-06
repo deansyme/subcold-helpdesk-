@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/prisma'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { SearchBar } from '@/components/ui/SearchBar'
@@ -6,40 +5,14 @@ import { CategoryCard } from '@/components/ui/CategoryCard'
 import { ArticleCard } from '@/components/ui/ArticleCard'
 import Link from 'next/link'
 import { MessageCircle } from 'lucide-react'
-import { getTranslations } from 'next-intl/server'
-
-async function getCategories() {
-  return prisma.category.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' },
-    include: {
-      _count: {
-        select: { articles: { where: { isPublished: true } } }
-      }
-    }
-  })
-}
-
-async function getPopularArticles() {
-  return prisma.article.findMany({
-    where: { 
-      isPublished: true, 
-      isPopular: true 
-    },
-    include: {
-      category: {
-        select: { name: true, slug: true }
-      }
-    },
-    orderBy: { viewCount: 'desc' },
-    take: 6
-  })
-}
+import { getTranslations, getLocale } from 'next-intl/server'
+import { getCategoriesWithTranslations, getPopularArticlesWithTranslations } from '@/lib/translations'
 
 export default async function HomePage() {
+  const locale = await getLocale()
   const [categories, popularArticles, t] = await Promise.all([
-    getCategories(),
-    getPopularArticles(),
+    getCategoriesWithTranslations(locale),
+    getPopularArticlesWithTranslations(locale),
     getTranslations()
   ])
 
