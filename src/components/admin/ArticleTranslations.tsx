@@ -2,6 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { Globe, Plus, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/RichTextEditor').then((mod) => mod.RichTextEditor),
+  { ssr: false, loading: () => <div className="h-[200px] bg-gray-100 rounded-lg animate-pulse" /> }
+)
 
 const LOCALES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -228,16 +234,14 @@ export function ArticleTranslations({
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Content (HTML)
+                        Content
                       </label>
-                      <textarea
-                        value={editForm.content}
-                        onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
-                        rows={6}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-subcold-teal font-mono text-sm"
+                      <RichTextEditor
+                        content={editForm.content}
+                        onChange={(value) => setEditForm({ ...editForm, content: value })}
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-4">
                       <button
                         type="button"
                         onClick={() => saveTranslation(translation.locale)}
@@ -318,16 +322,14 @@ export function ArticleTranslations({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Content (HTML)
+                    Content
                   </label>
-                  <textarea
-                    value={editForm.content}
-                    onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
-                    rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-subcold-teal font-mono text-sm"
+                  <RichTextEditor
+                    content={editForm.content}
+                    onChange={(value) => setEditForm({ ...editForm, content: value })}
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <button
                     type="button"
                     onClick={() => saveTranslation(editingLocale)}
