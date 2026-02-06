@@ -92,3 +92,27 @@ model SiteSettings {
   primaryColor       String  @default("#00B4D8")
   logoUrl            String  @default("https://subcold.com/cdn/shop/files/subcold-logo-white_39563153-4a05-4674-b976-f96a36b48c2c.png?v=1760517416&width=156")
 }
+
+model ReturnRequest {
+  id               String   @id @default(cuid())
+  returnReason     String   // Unwanted, Damage, Faulty
+  unwantedReason   String?  // Sub-reason for unwanted
+  fullName         String
+  email            String
+  orderNumber      String
+  purchaseChannel  String
+  productName      String?
+  serialNumber     String?
+  troubleshooting  String?  // Have they followed manual steps
+  description      String?
+  wantsReplacement String?
+  photoUrls        String[] // Array of uploaded photo URLs
+  status           String   @default("pending") // pending, in-review, approved, rejected, completed
+  adminNotes       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([orderNumber])
+}

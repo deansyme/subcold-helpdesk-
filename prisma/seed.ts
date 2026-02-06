@@ -146,13 +146,13 @@ async function main() {
 
 <h3>How to Return</h3>
 <ol>
-<li>Visit our <a href="https://subcold.com/pages/self-return-request-form">Self-Return Portal</a></li>
-<li>Enter your order number and email address</li>
-<li>Select the items you wish to return</li>
-<li>Choose your reason for return</li>
-<li>Print your prepaid return label</li>
+<li>Visit our <a href="/contact">Self-Return Portal</a></li>
+<li>Fill in your order details and reason for return</li>
+<li>Upload photos if your item is damaged</li>
+<li>Submit your request</li>
+<li>We'll email you within 1-2 working days with next steps</li>
 <li>Pack the item securely in its original packaging</li>
-<li>Drop off at your nearest courier location</li>
+<li>Ship using the instructions provided</li>
 </ol>
 
 <h3>Condition of Returns</h3>

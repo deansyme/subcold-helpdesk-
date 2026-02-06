@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  RotateCcw,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -21,6 +22,7 @@ const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
   { name: 'Articles', href: '/admin/articles', icon: FileText },
+  { name: 'Returns', href: '/admin/returns', icon: RotateCcw },
   { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ]
