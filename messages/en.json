@@ -1,0 +1,45 @@
+{
+  "common": {
+    "home": "Home",
+    "search": "Search",
+    "searchPlaceholder": "Search by typing keywords...",
+    "selectCategory": "Select category",
+    "backToHome": "Back to home",
+    "articlesInCategory": "Articles in this category",
+    "popularArticles": "Popular Articles",
+    "noArticlesFound": "No articles found",
+    "viewAll": "View all",
+    "contactUs": "Contact Us",
+    "submitRequest": "Submit a Request",
+    "relatedArticles": "Related Articles",
+    "wasHelpful": "Was this article helpful?",
+    "yes": "Yes",
+    "no": "No",
+    "thanksFeedback": "Thanks for your feedback!",
+    "lastUpdated": "Last updated",
+    "searchResults": "Search Results",
+    "resultsFor": "results for",
+    "noResults": "No results found for"
+  },
+  "home": {
+    "heroTitle": "HOW CAN WE HELP?",
+    "heroSubtitle": "Search our help center or browse categories below",
+    "browseCategories": "Browse Help Topics",
+    "articles": "articles"
+  },
+  "footer": {
+    "copyright": "© {year} Subcold. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "helpCenter": "Help Center"
+  },
+  "language": {
+    "select": "Language",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "nl": "Nederlands"
+  }
+}

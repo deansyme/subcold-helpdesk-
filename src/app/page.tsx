@@ -6,6 +6,7 @@ import { CategoryCard } from '@/components/ui/CategoryCard'
 import { ArticleCard } from '@/components/ui/ArticleCard'
 import Link from 'next/link'
 import { MessageCircle } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 async function getCategories() {
   return prisma.category.findMany({
@@ -36,9 +37,10 @@ async function getPopularArticles() {
 }
 
 export default async function HomePage() {
-  const [categories, popularArticles] = await Promise.all([
+  const [categories, popularArticles, t] = await Promise.all([
     getCategories(),
-    getPopularArticles()
+    getPopularArticles(),
+    getTranslations()
   ])
 
   return (
@@ -49,14 +51,14 @@ export default async function HomePage() {
       <section className="bg-subcold-black text-white py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            HOW CAN WE HELP?
+            {t('home.heroTitle')}
           </h1>
           <p className="text-gray-400 mb-8 text-lg">
-            Find answers to your questions about Subcold products and services
+            {t('home.heroSubtitle')}
           </p>
           <SearchBar 
             size="large" 
-            placeholder="Search for help articles..."
+            placeholder={t('common.searchPlaceholder')}
             className="max-w-2xl mx-auto"
           />
         </div>

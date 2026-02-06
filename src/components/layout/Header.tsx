@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher'
+import { cookies } from 'next/headers'
 
 export function Header() {
+  const cookieStore = cookies()
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en'
+
   return (
     <header className="bg-subcold-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +24,7 @@ export function Header() {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex items-center space-x-6">
+          <nav className="flex items-center space-x-4">
             <Link 
               href="https://subcold.com" 
               target="_blank"
@@ -34,6 +39,8 @@ export function Header() {
             >
               Contact Us
             </Link>
+            <div className="border-l border-gray-700 h-6 mx-2" />
+            <LanguageSwitcher currentLocale={locale} />
           </nav>
         </div>
       </div>

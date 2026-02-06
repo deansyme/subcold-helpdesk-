@@ -1,0 +1,45 @@
+{
+  "common": {
+    "home": "Home",
+    "search": "Zoeken",
+    "searchPlaceholder": "Zoek door trefwoorden te typen...",
+    "selectCategory": "Selecteer categorie",
+    "backToHome": "Terug naar home",
+    "articlesInCategory": "Artikelen in deze categorie",
+    "popularArticles": "Populaire artikelen",
+    "noArticlesFound": "Geen artikelen gevonden",
+    "viewAll": "Bekijk alles",
+    "contactUs": "Neem contact op",
+    "submitRequest": "Verzoek indienen",
+    "relatedArticles": "Gerelateerde artikelen",
+    "wasHelpful": "Was dit artikel nuttig?",
+    "yes": "Ja",
+    "no": "Nee",
+    "thanksFeedback": "Bedankt voor uw feedback!",
+    "lastUpdated": "Laatst bijgewerkt",
+    "searchResults": "Zoekresultaten",
+    "resultsFor": "resultaten voor",
+    "noResults": "Geen resultaten gevonden voor"
+  },
+  "home": {
+    "heroTitle": "HOE KUNNEN WE HELPEN?",
+    "heroSubtitle": "Doorzoek ons helpcentrum of blader door categorieën",
+    "browseCategories": "Blader door hulponderwerpen",
+    "articles": "artikelen"
+  },
+  "footer": {
+    "copyright": "© {year} Subcold. Alle rechten voorbehouden.",
+    "privacyPolicy": "Privacybeleid",
+    "termsOfService": "Servicevoorwaarden",
+    "helpCenter": "Helpcentrum"
+  },
+  "language": {
+    "select": "Taal",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "nl": "Nederlands"
+  }
+}

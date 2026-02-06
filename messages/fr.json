@@ -1,0 +1,45 @@
+{
+  "common": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "searchPlaceholder": "Recherchez en tapant des mots-clés...",
+    "selectCategory": "Sélectionner une catégorie",
+    "backToHome": "Retour à l'accueil",
+    "articlesInCategory": "Articles dans cette catégorie",
+    "popularArticles": "Articles populaires",
+    "noArticlesFound": "Aucun article trouvé",
+    "viewAll": "Voir tout",
+    "contactUs": "Nous contacter",
+    "submitRequest": "Soumettre une demande",
+    "relatedArticles": "Articles connexes",
+    "wasHelpful": "Cet article vous a-t-il été utile?",
+    "yes": "Oui",
+    "no": "Non",
+    "thanksFeedback": "Merci pour vos commentaires!",
+    "lastUpdated": "Dernière mise à jour",
+    "searchResults": "Résultats de recherche",
+    "resultsFor": "résultats pour",
+    "noResults": "Aucun résultat trouvé pour"
+  },
+  "home": {
+    "heroTitle": "COMMENT POUVONS-NOUS VOUS AIDER?",
+    "heroSubtitle": "Recherchez dans notre centre d'aide ou parcourez les catégories",
+    "browseCategories": "Parcourir les sujets d'aide",
+    "articles": "articles"
+  },
+  "footer": {
+    "copyright": "© {year} Subcold. Tous droits réservés.",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "helpCenter": "Centre d'aide"
+  },
+  "language": {
+    "select": "Langue",
+    "en": "English",
+    "de": "Deutsch",
+    "fr": "Français",
+    "es": "Español",
+    "it": "Italiano",
+    "nl": "Nederlands"
+  }
+}
