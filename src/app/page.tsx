@@ -44,8 +44,7 @@ export default async function HomePage() {
             <span className="font-semibold">NEED TO RETURN AN ITEM?</span>
             {' '}No problem! Start your return{' '}
             <Link 
-              href="https://subcold.com/pages/self-return-request-form" 
-              target="_blank"
+              href="/contact" 
               className="underline font-semibold hover:no-underline"
             >
               HERE

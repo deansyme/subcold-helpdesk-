@@ -15,8 +15,7 @@ export function Footer() {
               <span className="text-lg font-semibold">NEED TO RETURN AN ITEM? No problem!</span>
             </div>
             <Link
-              href="https://subcold.com/pages/self-return-request-form"
-              target="_blank"
+              href="/contact"
               className="px-6 py-2 bg-white text-subcold-teal font-semibold rounded-lg hover:bg-gray-100 transition-colors"
             >
               Start your return HERE
@@ -55,7 +54,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="https://subcold.com/pages/self-return-request-form" target="_blank" className="text-gray-400 hover:text-white text-sm transition-colors">
+                <Link href="/contact" className="text-gray-400 hover:text-white text-sm transition-colors">
                   Start a Return
                 </Link>
               </li>
