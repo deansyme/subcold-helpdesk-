@@ -122,6 +122,12 @@ function generateReplyEmailHTML(ticket: any, message: string, senderName: string
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        .message-content p { margin: 0 0 1em; }
+        .message-content p:last-child { margin-bottom: 0; }
+        .message-content ul, .message-content ol { margin: 0 0 1em; padding-left: 1.5em; }
+        .message-content a { color: #00B4D8; }
+      </style>
     </head>
     <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="background: #000; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -133,8 +139,8 @@ function generateReplyEmailHTML(ticket: any, message: string, senderName: string
         
         <p>Thank you for contacting Subcold Support. Here is our response to your enquiry:</p>
         
-        <div style="background: #f8f9fa; border-left: 4px solid #00B4D8; padding: 15px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
-          <p style="margin: 0; white-space: pre-wrap;">${message.replace(/\n/g, '<br>')}</p>
+        <div class="message-content" style="background: #f8f9fa; border-left: 4px solid #00B4D8; padding: 15px 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+          ${message}
         </div>
         
         <p style="color: #666; font-size: 14px;">
@@ -153,7 +159,7 @@ function generateReplyEmailHTML(ticket: any, message: string, senderName: string
         <p style="margin: 0 0 10px;">${senderName} | Subcold Support Team</p>
         <p style="margin: 0;">
           <a href="https://support.subcold.com" style="color: #00B4D8; text-decoration: none;">support.subcold.com</a> | 
-          <a href="tel:01onal440557" style="color: #00B4D8; text-decoration: none;">01506 440557</a>
+          <a href="tel:01506440557" style="color: #00B4D8; text-decoration: none;">01506 440557</a>
         </p>
       </div>
     </body>

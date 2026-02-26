@@ -101,12 +101,19 @@ export default function TicketConversation({
                   </span>
                 )}
               </div>
-              <div className={`rounded-lg p-4 text-gray-700 whitespace-pre-wrap ${
+              <div className={`rounded-lg p-4 text-gray-700 ${
                 reply.sender === 'admin'
                   ? 'bg-teal-50'
                   : 'bg-blue-50'
               }`}>
-                {reply.message}
+                {reply.sender === 'admin' ? (
+                  <div 
+                    className="prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: reply.message }} 
+                  />
+                ) : (
+                  <div className="whitespace-pre-wrap">{reply.message}</div>
+                )}
               </div>
             </div>
           </div>

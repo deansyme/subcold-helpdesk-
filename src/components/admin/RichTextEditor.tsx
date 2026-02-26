@@ -4,9 +4,11 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
+import Underline from '@tiptap/extension-underline'
 import {
   Bold,
   Italic,
+  Underline as UnderlineIcon,
   List,
   ListOrdered,
   Heading2,
@@ -19,9 +21,11 @@ import {
 interface RichTextEditorProps {
   content: string
   onChange: (content: string) => void
+  placeholder?: string
+  minHeight?: string
 }
 
-export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
+export function RichTextEditor({ content, onChange, placeholder, minHeight = '300px' }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -29,8 +33,9 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         openOnClick: false,
       }),
       Placeholder.configure({
-        placeholder: 'Write your article content here...',
+        placeholder: placeholder || 'Write your content here...',
       }),
+      Underline,
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -85,6 +90,12 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
         >
           <Italic className="h-4 w-4" />
         </ToolbarButton>
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          isActive={editor.isActive('underline')}
+        >
+          <UnderlineIcon className="h-4 w-4" />
+        </ToolbarButton>
         <div className="w-px h-6 bg-gray-300 mx-1" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -130,7 +141,8 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
       {/* Editor */}
       <EditorContent
         editor={editor}
-        className="prose max-w-none p-4 min-h-[300px] focus:outline-none"
+        className="prose max-w-none p-4 focus:outline-none"
+        style={{ minHeight }}
       />
     </div>
   )
