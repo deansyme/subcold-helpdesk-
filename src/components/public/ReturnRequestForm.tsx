@@ -144,11 +144,23 @@ export default function ReturnRequestForm() {
         photoBase64s.push(base64)
       }
 
-      const response = await fetch('/api/return-request', {
+      const response = await fetch('/api/tickets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          type: 'return',
+          fullName: formData.fullName,
+          email: formData.email,
+          subject: `Return Request - ${formData.returnReason}`,
+          message: formData.description || `Return request for ${formData.productName}`,
+          orderNumber: formData.orderNumber,
+          purchaseChannel: formData.purchaseChannel,
+          returnReason: formData.returnReason,
+          unwantedReason: formData.unwantedReason,
+          productName: formData.productName,
+          serialNumber: formData.serialNumber,
+          troubleshooting: formData.troubleshooting,
+          wantsReplacement: formData.wantsReplacement,
           photos: photoBase64s
         })
       })

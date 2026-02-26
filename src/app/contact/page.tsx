@@ -1,11 +1,11 @@
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
-import ReturnRequestForm from '@/components/public/ReturnRequestForm'
+import ContactForms from '@/components/public/ContactForms'
 
 export const metadata = {
-  title: 'Returns & Contact - Subcold Support',
-  description: 'Submit a return request or get in touch with the Subcold support team. We\'re here to help with any questions about your Subcold products.',
+  title: 'Contact Us - Subcold Support',
+  description: 'Get in touch with the Subcold support team or submit a return request. We\'re here to help with any questions about your Subcold products.',
 }
 
 export default function ContactPage() {
@@ -18,22 +18,22 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto px-4">
           <Breadcrumbs 
             items={[
-              { label: 'Returns & Contact' }
+              { label: 'Contact Us' }
             ]} 
           />
           <h1 className="text-3xl md:text-4xl font-bold mt-6">
-            Returns & Contact
+            Contact Us
           </h1>
           <p className="text-gray-400 mt-2">
-            Submit a return request or get in touch with our support team.
+            Have a question or need help? We're here for you.
           </p>
         </div>
       </section>
 
       <main className="flex-1 bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4">
-          {/* Return Request Form */}
-          <ReturnRequestForm />
+          {/* Contact Forms with Tabs */}
+          <ContactForms />
 
           {/* Contact Info */}
           <div className="mt-12 bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">

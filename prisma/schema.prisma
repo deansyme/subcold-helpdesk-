@@ -93,6 +93,52 @@ model SiteSettings {
   logoUrl            String  @default("https://subcold.com/cdn/shop/files/subcold-logo-white_39563153-4a05-4674-b976-f96a36b48c2c.png?v=1760517416&width=156")
 }
 
+// Unified ticket system
+model Ticket {
+  id           String   @id @default(cuid())
+  ticketNumber String   @unique // Human-readable ticket number like TKT-001234
+  type         String   // return, enquiry, support, complaint
+  status       String   @default("open") // open, in-progress, awaiting-customer, resolved, closed
+  priority     String   @default("normal") // low, normal, high, urgent
+  
+  // Customer info
+  fullName     String
+  email        String
+  phone        String?
+  
+  // Ticket content
+  subject      String
+  message      String   @db.Text
+  
+  // For return tickets
+  orderNumber     String?
+  purchaseChannel String?
+  returnReason    String?
+  unwantedReason  String?
+  productName     String?
+  serialNumber    String?
+  troubleshooting String?
+  wantsReplacement String?
+  
+  // Attachments (photo URLs)
+  attachments  String[]
+  
+  // Admin fields
+  assignedTo   String?
+  adminNotes   String?  @db.Text
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([email])
+  @@index([orderNumber])
+  @@index([ticketNumber])
+}
+
+// Keep legacy ReturnRequest for backwards compatibility, flag as deprecated
 model ReturnRequest {
   id               String   @id @default(cuid())
   returnReason     String   // Unwanted, Damage, Faulty

@@ -14,16 +14,16 @@ import {
   ExternalLink,
   Menu,
   X,
-  RotateCcw,
+  Ticket,
   FormInput,
 } from 'lucide-react'
 import { useState } from 'react'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Tickets', href: '/admin/tickets', icon: Ticket },
   { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
   { name: 'Articles', href: '/admin/articles', icon: FileText },
-  { name: 'Returns', href: '/admin/returns', icon: RotateCcw },
   { name: 'Return Form', href: '/admin/return-form', icon: FormInput },
   { name: 'Users', href: '/admin/users', icon: Users },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
