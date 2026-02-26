@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Mail, Phone, Package, Calendar, User, MessageSquare } from 'lucide-react'
 import TicketStatusForm from './TicketStatusForm'
+import TicketConversation from './TicketConversation'
+import TicketReplyForm from './TicketReplyForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +16,11 @@ async function getTicket(ticketRef: string) {
         { id: ticketRef },
         { ticketNumber: ticketRef }
       ]
+    },
+    include: {
+      replies: {
+        orderBy: { createdAt: 'asc' }
+      }
     }
   })
   return ticket
@@ -199,6 +206,17 @@ export default async function TicketDetailPage({
 
           {/* Admin Actions */}
           <TicketStatusForm ticket={ticket} />
+
+          {/* Conversation Thread */}
+          <TicketConversation 
+            initialMessage={ticket.message}
+            customerName={ticket.fullName}
+            createdAt={ticket.createdAt}
+            replies={ticket.replies}
+          />
+
+          {/* Reply Form */}
+          <TicketReplyForm ticketId={ticket.id} customerEmail={ticket.email} />
         </div>
 
         {/* Sidebar */}
@@ -236,10 +254,10 @@ export default async function TicketDetailPage({
             <div className="space-y-2">
               <a
                 href={`mailto:${ticket.email}?subject=Re: ${ticket.ticketNumber} - ${ticket.subject}`}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                Reply by Email
+                Open in Email Client
               </a>
             </div>
           </div>
