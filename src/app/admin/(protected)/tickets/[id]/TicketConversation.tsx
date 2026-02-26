@@ -57,7 +57,7 @@ export default function TicketConversation({
               <span className="font-medium text-gray-900">{customerName}</span>
               <span className="text-xs text-gray-500">{formatDate(createdAt)}</span>
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-700 whitespace-pre-wrap">
+            <div className="bg-white border border-gray-200 rounded-lg p-4 text-gray-700 whitespace-pre-wrap">
               {initialMessage}
             </div>
           </div>
@@ -113,8 +113,8 @@ export default function TicketConversation({
                   isNote
                     ? 'bg-amber-50 border border-amber-200 border-dashed'
                     : isAdmin
-                      ? 'bg-white border-l-4 border-l-orange-400 border border-gray-200'
-                      : 'bg-gray-50 border border-gray-200'
+                      ? 'bg-gray-100 border-l-4 border-l-orange-400 border border-gray-200'
+                      : 'bg-white border border-gray-200'
                 }`}>
                   {isAdmin || isNote ? (
                     <div 
