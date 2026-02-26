@@ -169,8 +169,8 @@ export default async function TicketsPage({
               {tickets.map((ticket) => {
                 const lastReply = ticket.replies[0]
                 const lastMessage = lastReply 
-                  ? lastReply.message.replace(/<[^>]*>/g, '').substring(0, 60) 
-                  : ticket.message.substring(0, 60)
+                  ? lastReply.message.replace(/<[^>]*>/g, '').substring(0, 80) 
+                  : ticket.message.substring(0, 80)
                 
                 return (
                 <tr key={ticket.id} className="hover:bg-gray-50">
@@ -192,10 +192,8 @@ export default async function TicketsPage({
                     <div className="text-sm text-gray-500">{ticket.email}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-600 truncate max-w-xs">
-                      <span className="font-medium text-gray-900">{ticket.subject}</span>
-                      <span className="text-gray-400 mx-1">—</span>
-                      {lastMessage}{lastMessage.length >= 60 ? '...' : ''}
+                    <div className="text-sm text-gray-600 truncate max-w-md">
+                      {lastMessage}{lastMessage.length >= 80 ? '...' : ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
