@@ -1,9 +1,10 @@
 'use client'
 
-import { User, Headphones } from 'lucide-react'
+import { User, Headphones, StickyNote } from 'lucide-react'
 
 interface Reply {
   id: string
+  type: string  // "reply" or "note"
   sender: string
   senderName: string
   senderEmail: string
@@ -64,60 +65,78 @@ export default function TicketConversation({
           </div>
         </div>
 
-        {/* Replies */}
-        {replies.map((reply) => (
-          <div key={reply.id} className="flex gap-4">
-            <div className="flex-shrink-0">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                reply.sender === 'admin' 
-                  ? 'bg-teal-100' 
-                  : 'bg-blue-100'
-              }`}>
-                {reply.sender === 'admin' ? (
-                  <Headphones className="w-5 h-5 text-teal-600" />
-                ) : (
-                  <User className="w-5 h-5 text-blue-600" />
-                )}
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <span className="font-medium text-gray-900">{reply.senderName}</span>
-                <span className="text-xs text-gray-500">{formatDate(reply.createdAt)}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  reply.sender === 'admin'
-                    ? 'bg-teal-100 text-teal-700'
-                    : 'bg-blue-100 text-blue-700'
+        {/* Replies and Notes */}
+        {replies.map((reply) => {
+          const isNote = reply.type === 'note'
+          
+          return (
+            <div key={reply.id} className={`flex gap-4 ${isNote ? 'opacity-90' : ''}`}>
+              <div className="flex-shrink-0">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  isNote 
+                    ? 'bg-amber-100'
+                    : reply.sender === 'admin' 
+                      ? 'bg-teal-100' 
+                      : 'bg-blue-100'
                 }`}>
-                  {reply.sender === 'admin' ? 'Support' : 'Customer'}
-                </span>
-                {reply.sender === 'admin' && (
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    reply.emailSent
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-yellow-100 text-yellow-700'
-                  }`}>
-                    {reply.emailSent ? 'Email Sent' : 'Email Pending'}
-                  </span>
-                )}
+                  {isNote ? (
+                    <StickyNote className="w-5 h-5 text-amber-600" />
+                  ) : reply.sender === 'admin' ? (
+                    <Headphones className="w-5 h-5 text-teal-600" />
+                  ) : (
+                    <User className="w-5 h-5 text-blue-600" />
+                  )}
+                </div>
               </div>
-              <div className={`rounded-lg p-4 text-gray-700 ${
-                reply.sender === 'admin'
-                  ? 'bg-teal-50'
-                  : 'bg-blue-50'
-              }`}>
-                {reply.sender === 'admin' ? (
-                  <div 
-                    className="prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: reply.message }} 
-                  />
-                ) : (
-                  <div className="whitespace-pre-wrap">{reply.message}</div>
-                )}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-medium text-gray-900">{reply.senderName}</span>
+                  <span className="text-xs text-gray-500">{formatDate(reply.createdAt)}</span>
+                  {isNote ? (
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                      Internal Note
+                    </span>
+                  ) : (
+                    <>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        reply.sender === 'admin'
+                          ? 'bg-teal-100 text-teal-700'
+                          : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        {reply.sender === 'admin' ? 'Support' : 'Customer'}
+                      </span>
+                      {reply.sender === 'admin' && (
+                        <span className={`text-xs px-2 py-0.5 rounded-full ${
+                          reply.emailSent
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {reply.emailSent ? 'Email Sent' : 'Email Pending'}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+                <div className={`rounded-lg p-4 text-gray-700 ${
+                  isNote
+                    ? 'bg-amber-50 border border-amber-200 border-dashed'
+                    : reply.sender === 'admin'
+                      ? 'bg-teal-50'
+                      : 'bg-blue-50'
+                }`}>
+                  {reply.sender === 'admin' || isNote ? (
+                    <div 
+                      className="prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ __html: reply.message }} 
+                    />
+                  ) : (
+                    <div className="whitespace-pre-wrap">{reply.message}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
 
         {replies.length === 0 && (
           <p className="text-center text-gray-500 text-sm py-4">

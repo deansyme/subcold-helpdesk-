@@ -147,12 +147,13 @@ model TicketReply {
   ticketId  String
   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   
+  type      String   @default("reply") // "reply" or "note"
   sender    String   // "admin" or "customer"
   senderName String  // Name of person who sent
   senderEmail String // Email of sender
   message   String   @db.Text
   
-  // For email tracking
+  // For email tracking (only for replies, not notes)
   emailSent Boolean  @default(false)
   emailError String?
   

@@ -29,7 +29,7 @@ export async function GET(
   }
 }
 
-// POST - Create a new reply and send email
+// POST - Create a new reply or internal note
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -41,7 +41,7 @@ export async function POST(
 
   try {
     const body = await request.json()
-    const { message, updateStatus } = body
+    const { message, updateStatus, type = 'reply' } = body
 
     if (!message || !message.trim()) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
@@ -56,10 +56,13 @@ export async function POST(
       return NextResponse.json({ error: 'Ticket not found' }, { status: 404 })
     }
 
-    // Create the reply
+    const isNote = type === 'note'
+
+    // Create the reply or note
     const reply = await prisma.ticketReply.create({
       data: {
         ticketId: params.id,
+        type: isNote ? 'note' : 'reply',
         sender: 'admin',
         senderName: session.user?.name || 'Support Team',
         senderEmail: session.user?.email || 'support@subcold.com',
@@ -68,21 +71,31 @@ export async function POST(
       }
     })
 
-    // Update ticket status if requested
-    const newStatus = updateStatus || 'awaiting-customer'
-    await prisma.ticket.update({
-      where: { id: params.id },
-      data: { 
-        status: newStatus,
-        updatedAt: new Date()
-      }
-    })
+    // Update ticket status only for replies (not notes)
+    if (!isNote && updateStatus) {
+      await prisma.ticket.update({
+        where: { id: params.id },
+        data: { 
+          status: updateStatus,
+          updatedAt: new Date()
+        }
+      })
+    } else if (!isNote) {
+      // Default status update for replies
+      await prisma.ticket.update({
+        where: { id: params.id },
+        data: { 
+          status: 'awaiting-customer',
+          updatedAt: new Date()
+        }
+      })
+    }
 
-    // Send email to customer
+    // Send email to customer (only for replies, not notes)
     let emailSent = false
     let emailError: string | null = null
 
-    if (resend) {
+    if (resend && !isNote) {
       try {
         await resend.emails.send({
           from: 'Subcold Support <support@support.subcold.com>',
@@ -107,7 +120,8 @@ export async function POST(
     return NextResponse.json({
       reply,
       emailSent,
-      emailError
+      emailError,
+      isNote
     })
   } catch (error) {
     console.error('Error creating reply:', error)
