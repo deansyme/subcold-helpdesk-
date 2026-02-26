@@ -1,6 +1,6 @@
 'use client'
 
-import { User, Headphones, StickyNote } from 'lucide-react'
+import { User, Headphones, StickyNote, FileText, Image as ImageIcon, Download } from 'lucide-react'
 
 interface Reply {
   id: string
@@ -9,6 +9,7 @@ interface Reply {
   senderName: string
   senderEmail: string
   message: string
+  attachments: string[]
   emailSent: boolean
   createdAt: Date | string
 }
@@ -131,6 +132,50 @@ export default function TicketConversation({
                     />
                   ) : (
                     <div className="whitespace-pre-wrap">{reply.message}</div>
+                  )}
+                  
+                  {/* Attachments */}
+                  {reply.attachments && reply.attachments.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+                      <p className="text-xs text-gray-500 font-medium">Attachments:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {reply.attachments.map((url, idx) => {
+                          const filename = url.split('/').pop() || 'file'
+                          const displayName = filename.includes('-') 
+                            ? filename.substring(filename.indexOf('-') + 1) 
+                            : filename
+                          const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url)
+                          
+                          return isImage ? (
+                            <a
+                              key={idx}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block"
+                            >
+                              <img
+                                src={url}
+                                alt={displayName}
+                                className="max-h-40 rounded-lg border border-gray-200 hover:border-teal-500 transition-colors"
+                              />
+                            </a>
+                          ) : (
+                            <a
+                              key={idx}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 hover:border-teal-500 hover:bg-teal-50 transition-colors text-sm"
+                            >
+                              <FileText className="w-4 h-4 text-gray-500" />
+                              <span className="truncate max-w-xs">{displayName}</span>
+                              <Download className="w-4 h-4 text-gray-400" />
+                            </a>
+                          )
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

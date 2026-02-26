@@ -152,6 +152,7 @@ model TicketReply {
   senderName String  // Name of person who sent
   senderEmail String // Email of sender
   message   String   @db.Text
+  attachments String[] // URLs of uploaded files
   
   // For email tracking (only for replies, not notes)
   emailSent Boolean  @default(false)

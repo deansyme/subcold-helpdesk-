@@ -41,7 +41,7 @@ export async function POST(
 
   try {
     const body = await request.json()
-    const { message, updateStatus, type = 'reply' } = body
+    const { message, updateStatus, type = 'reply', attachments = [] } = body
 
     if (!message || !message.trim()) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
@@ -67,6 +67,7 @@ export async function POST(
         senderName: session.user?.name || 'Support Team',
         senderEmail: session.user?.email || 'support@subcold.com',
         message: message.trim(),
+        attachments: attachments,
         emailSent: false
       }
     })
