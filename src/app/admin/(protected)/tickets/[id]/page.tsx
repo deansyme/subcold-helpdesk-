@@ -144,7 +144,7 @@ export default async function TicketDetailPage({
             </div>
           </div>
 
-          {/* Return-Specific Details */}
+          {/* Return Details */}
           {ticket.type === 'return' && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -204,9 +204,6 @@ export default async function TicketDetailPage({
             </div>
           )}
 
-          {/* Admin Actions */}
-          <TicketStatusForm ticket={ticket} />
-
           {/* Conversation Thread */}
           <TicketConversation 
             initialMessage={ticket.message}
@@ -217,6 +214,9 @@ export default async function TicketDetailPage({
 
           {/* Reply Form */}
           <TicketReplyForm ticketId={ticket.id} customerEmail={ticket.email} />
+
+          {/* Update Ticket Status */}
+          <TicketStatusForm ticket={ticket} />
         </div>
 
         {/* Sidebar */}

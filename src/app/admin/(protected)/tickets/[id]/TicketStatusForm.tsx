@@ -9,7 +9,6 @@ interface Ticket {
   status: string
   priority: string
   assignedTo: string | null
-  adminNotes: string | null
 }
 
 export default function TicketStatusForm({ ticket }: { ticket: Ticket }) {
@@ -17,7 +16,6 @@ export default function TicketStatusForm({ ticket }: { ticket: Ticket }) {
   const [status, setStatus] = useState(ticket.status)
   const [priority, setPriority] = useState(ticket.priority)
   const [assignedTo, setAssignedTo] = useState(ticket.assignedTo || '')
-  const [adminNotes, setAdminNotes] = useState(ticket.adminNotes || '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -33,8 +31,7 @@ export default function TicketStatusForm({ ticket }: { ticket: Ticket }) {
         body: JSON.stringify({
           status,
           priority,
-          assignedTo: assignedTo || null,
-          adminNotes: adminNotes || null
+          assignedTo: assignedTo || null
         })
       })
 
@@ -120,23 +117,6 @@ export default function TicketStatusForm({ ticket }: { ticket: Ticket }) {
             placeholder="Enter assignee name or email"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
-        </div>
-
-        {/* Admin Notes */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Internal Notes
-          </label>
-          <textarea
-            value={adminNotes}
-            onChange={(e) => setAdminNotes(e.target.value)}
-            rows={4}
-            placeholder="Add internal notes about this ticket..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            These notes are only visible to admins
-          </p>
         </div>
 
         {/* Submit */}
