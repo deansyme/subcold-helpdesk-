@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
 import TicketFilters from './TicketFilters'
 
 export const dynamic = 'force-dynamic'
@@ -10,6 +9,12 @@ async function getTickets(type?: string, status?: string) {
     where: {
       ...(type && type !== 'all' && { type }),
       ...(status && status !== 'all' && { status })
+    },
+    include: {
+      replies: {
+        orderBy: { createdAt: 'desc' },
+        take: 1
+      }
     },
     orderBy: { createdAt: 'desc' }
   })
@@ -144,23 +149,32 @@ export default async function TicketsPage({
                   Customer
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Message
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Created
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Reply
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Type
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {tickets.map((ticket) => (
+              {tickets.map((ticket) => {
+                const lastReply = ticket.replies[0]
+                const lastMessage = lastReply 
+                  ? lastReply.message.replace(/<[^>]*>/g, '').substring(0, 60) 
+                  : ticket.message.substring(0, 60)
+                
+                return (
                 <tr key={ticket.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <span className={`mr-2 ${getPriorityBadge(ticket.priority)}`}>
                         {ticket.priority === 'urgent' && '●'}
@@ -168,19 +182,53 @@ export default async function TicketsPage({
                         {ticket.priority === 'normal' && '○'}
                         {ticket.priority === 'low' && '○'}
                       </span>
-                      <div>
-                        <div className="font-mono text-sm text-gray-900">
-                          {ticket.ticketNumber}
-                        </div>
-                        <div className="text-sm text-gray-500 truncate max-w-xs">
-                          {ticket.subject}
-                        </div>
-                      </div>
+                      <Link href={`/admin/tickets/${ticket.ticketNumber}`} className="font-mono text-sm text-teal-600 hover:text-teal-900 hover:underline">
+                        {ticket.ticketNumber}
+                      </Link>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">{ticket.fullName}</div>
                     <div className="text-sm text-gray-500">{ticket.email}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-600 truncate max-w-xs">
+                      <span className="font-medium text-gray-900">{ticket.subject}</span>
+                      <span className="text-gray-400 mx-1">—</span>
+                      {lastMessage}{lastMessage.length >= 60 ? '...' : ''}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(ticket.createdAt).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                    <div className="text-xs text-gray-400">
+                      {new Date(ticket.createdAt).toLocaleTimeString('en-GB', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {lastReply ? (
+                      <>
+                        {new Date(lastReply.createdAt).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                        <div className="text-xs text-gray-400">
+                          {new Date(lastReply.createdAt).toLocaleTimeString('en-GB', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${getTypeBadge(ticket.type)}`}>
@@ -192,23 +240,8 @@ export default async function TicketsPage({
                       {formatStatus(ticket.status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(ticket.createdAt).toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric'
-                    })}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link 
-                      href={`/admin/tickets/${ticket.ticketNumber}`}
-                      className="text-teal-600 hover:text-teal-900"
-                    >
-                      View
-                    </Link>
-                  </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>
